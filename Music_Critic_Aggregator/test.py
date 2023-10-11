@@ -20,8 +20,10 @@ searchBtn.click()
 # Input Search
 searchElem = driver.find_element(By.XPATH, '//*[@id="empty-search-header"]/div/div/div/div/div/form/input')
 driver.implicitly_wait(2)
+artistName = input("Enter an Artist Name: ")
 albumName = input("Enter an Album Name: ")
-searchElem.send_keys(albumName)
+reviewName = artistName + ' ' + albumName
+searchElem.send_keys(reviewName)
 driver.implicitly_wait(2)
 searchElem.send_keys(Keys.RETURN)
 
@@ -44,19 +46,26 @@ if(reviewCountString == "1"):
     # In case of overlay popping up:
     # overlayCrud = driver.find_element(By.XPATH, '//*[@id="bx-close-inside-1643994"]/svg')
     # overlayCrud.click()
-    reviewScoreElem = driver.find_element(By.XPATH, '//*[@id="main-content"]/article/div[1]/header/div[1]/div[2]/div/div[2]/div/div[2]/p')
+    #reviewScoreElem = driver.find_element(By.XPATH, '//*[@id="main-content"]/article/div[1]/header/div[1]/div[2]/div/div[2]/div/div[2]/p')
+    reviewScoreElem = driver.find_element(By.XPATH, '/html/body/div[1]/div/main/article/div[1]/header/div[1]/div[2]/div/div[2]/div/div/p')
+    
     reviewScore = reviewScoreElem.text
     print("The review score for " + albumName + " is " + str(reviewScore))
 else:
     print("Choose Which Review:")
     multReviewCount = int(reviewCountString)
-    i = 0
+    i = 1
     while i <= multReviewCount:
         print(i)
+        tempAlbumName = driver.find_element(By.XPATH, '//*[@id="result-albumreviews"]/ul/li[' + str(i) + ']/div/a/div[2]/h2/em')
+        print(tempAlbumName)
         i = i + 1
 
 # Close Browser
 driver.close()
 
 # Notes:
-# - Album Scores on Pitchfork have different xpath if over 9 score or under 9 score (ex. The Slow Rush by Tame Impala)
+# - [FIXED] Album Scores on Pitchfork have different xpath if over 9 score or under 9 score (ex. The Slow Rush by Tame Impala)
+# - Album Results have different xpath if notch included
+#   - Recommend: Add if/then that checks for special album
+#   - Only be needed for duplicate album reviews
